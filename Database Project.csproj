@@ -95,7 +95,7 @@
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tranasction.cs" />
+    <Compile Include="Transaction.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>

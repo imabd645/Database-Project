@@ -41,6 +41,7 @@ namespace Database_Project
         }
         public void Update_Balance(float amount)
         {
+            balance = float.Parse(Get_Details("balance"));
             string query = $"UPDATE users SET balance='{balance+amount}' WHERE account='{account}'";
             DatabaseHelper.Instance.Update(query);
         }

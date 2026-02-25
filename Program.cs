@@ -13,7 +13,9 @@ namespace Database_Project
         static User current_user = null;
         static void Main(string[] args)
         {
-           
+            
+
+            
             User_Code();
            
         }
@@ -51,6 +53,8 @@ namespace Database_Project
                     switch (choice)
                     {
                         case 1:
+                            Money_Transfer();
+                            Pause();
                             break;
                         case 2:
                             break;
@@ -150,6 +154,43 @@ namespace Database_Project
             Console.WriteLine("Press any key to continue....");
             Console.ReadKey();
             Console.Clear();
+        }
+        static void Money_Transfer()
+        {
+            Console.Write("Enter the Reciver Account number: ");
+            string acc = Console.ReadLine();
+            User rec = new User(acc);
+            if(rec.Exists())
+            {
+                Console.WriteLine($"Reciever Name: {rec.Get_Details("name")}");
+                Console.Write("Enter the amount to tarnsfer: ");
+                float amount = float.Parse(Console.ReadLine());
+                if (amount <= float.Parse(current_user.Get_Details("balance"))) 
+                {
+                    Console.Write("Enter pin to confirm transfer: ");
+                    string pin = Console.ReadLine();
+                    if(pin==current_user.Get_Details("pin"))
+                    {
+                        current_user.Update_Balance(-1 * amount);
+                        rec.Update_Balance(amount);
+                        Transaction t = new Transaction(current_user.account, rec.account, current_user.name, rec.name, "Transfer", amount);
+                        t.Add_Transaction();
+                        Console.WriteLine("Tranasction Successful");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Pin");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Insufficient balance");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Account Number");
+            }
         }
         static void Create_User()
         {
