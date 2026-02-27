@@ -27,7 +27,7 @@ namespace Database_Project
             this.amount = amount;
             time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); 
         }
-
+        
         public void Add_Transaction()
         {
             string query = $"INSERT INTO transactions VALUES('{fromacc}','{toacc}','{fromname}','{toname}','{type}','{amount}','{time}')";

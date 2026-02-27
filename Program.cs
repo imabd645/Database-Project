@@ -10,12 +10,13 @@ namespace Database_Project
 {
     internal class Program
     {
+
         static User current_user = null;
         static void Main(string[] args)
         {
-            
 
             
+
             User_Code();
            
         }
@@ -57,6 +58,7 @@ namespace Database_Project
                             Pause();
                             break;
                         case 2:
+                            Bill_Payment();
                             break;
                         case 3:
                             MyAccount_Code();
@@ -85,19 +87,28 @@ namespace Database_Project
             Console.Write("Enter the Pin: ");
             string pin = Console.ReadLine();
             User user = new User(acc);
-            if(user.Exists())
+            if (user.Exists())
             {
-                if(pin==user.Get_Details("pin"))
+                user.Load_User();
+                if (user.active)
                 {
-                    Console.WriteLine("Login Successful");
-                    current_user = user;
-                    return true;
+                    if (pin == user.Get_Details("pin"))
+                    {
+                        Console.WriteLine("Login Successful");
+                        current_user = user;
+                        current_user.Load_User();
+                        return true;
+                    }
+                    else
+                    {
+                        Console.Write("Incorrect Pin");
+                    }
+
                 }
                 else
                 {
-                    Console.Write("Incorrect Pin");
+                    Console.WriteLine("Your Account is Blocked");
                 }
-
             }
             else
             {
@@ -135,8 +146,11 @@ namespace Database_Project
                             Pause();
                             break;
                         case 2:
+                            current_user.Show_Transaction();
+                            Pause();
                             break;
                         case 3:
+                        Console.Clear();
                             current_user.View_details();
                             Pause();
                             break;
@@ -157,40 +171,57 @@ namespace Database_Project
         }
         static void Money_Transfer()
         {
-            Console.Write("Enter the Reciver Account number: ");
+            Console.Clear();
+            Console.Write("Enter the Reciever number: ");
             string acc = Console.ReadLine();
             User rec = new User(acc);
-            if(rec.Exists())
+            if (rec.Exists())
             {
-                Console.WriteLine($"Reciever Name: {rec.Get_Details("name")}");
-                Console.Write("Enter the amount to tarnsfer: ");
-                float amount = float.Parse(Console.ReadLine());
-                if (amount <= float.Parse(current_user.Get_Details("balance"))) 
+                rec.Load_User();
+                if (rec.active)
                 {
-                    Console.Write("Enter pin to confirm transfer: ");
+                    Console.WriteLine($"Reciever Name: {rec.name}");
+                    Console.Write("Enter the amount to transfer: ");
+                    float amount = float.Parse(Console.ReadLine());
+                    if (amount > current_user.balance)
+                    {
+                        Console.WriteLine("Insuffiecint funds");
+                        return;
+                    }
+                    if (amount <= 0)
+                    {
+                        Console.WriteLine("Amount should be greater than zero!");
+                        return;
+                    }
+                    Console.Write("Enter your oin to Confirm Transaction");
                     string pin = Console.ReadLine();
-                    if(pin==current_user.Get_Details("pin"))
+                    if (pin != current_user.pin)
                     {
-                        current_user.Update_Balance(-1 * amount);
-                        rec.Update_Balance(amount);
-                        Transaction t = new Transaction(current_user.account, rec.account, current_user.name, rec.name, "Transfer", amount);
-                        t.Add_Transaction();
-                        Console.WriteLine("Tranasction Successful");
+                        Console.WriteLine("Incorrect Pin!");
+                        return;
                     }
-                    else
-                    {
-                        Console.WriteLine("Invalid Pin");
-                    }
+                    current_user.Update_Balance(current_user.balance - amount);
+                    rec.Update_Balance(rec.balance + amount);
+                    Console.WriteLine("Transaction Successful");
+                    Transaction t = new Transaction(current_user.account, rec.account, current_user.name, rec.name, "Transfer", amount);
+                    t.Add_Transaction();
                 }
                 else
                 {
-                    Console.WriteLine("Insufficient balance");
+                    Console.WriteLine("The Reciever Account is blocked");
+                    return;
                 }
+
+                
             }
             else
             {
-                Console.WriteLine("Invalid Account Number");
+                Console.WriteLine("Invalid Account Number!");
             }
+        }
+        static void Bill_Payment()
+        {
+            Consi
         }
         static void Create_User()
         {

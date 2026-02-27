@@ -28,6 +28,27 @@ namespace Database_Project
             activeValue = active ? 1 : 0;
         }
 
+        public void Load_User()
+        {
+            this.account = this.Get_Details("account");
+            this.name = this.Get_Details("name");
+            this.pin = this.Get_Details("pin");
+            this.active = bool.Parse(this.Get_Details("active"));
+            this.balance = float.Parse(this.Get_Details("balance"));
+        }
+
+        public void Activate()
+        {
+            string query = $"UPADTE users SET active=1 WHERE account='{account}'";
+            DatabaseHelper.Instance.Update(query);
+        }
+        public void Deactivate()
+        {
+            string query = $"UPADTE users SET active=0 WHERE account='{account}'";
+            DatabaseHelper.Instance.Update(query);
+        }
+
+
         public void Create()
         {
             
@@ -41,8 +62,8 @@ namespace Database_Project
         }
         public void Update_Balance(float amount)
         {
-            balance = float.Parse(Get_Details("balance"));
-            string query = $"UPDATE users SET balance='{balance+amount}' WHERE account='{account}'";
+           
+            string query = $"UPDATE users SET balance='{amount}' WHERE account='{account}'";
             DatabaseHelper.Instance.Update(query);
         }
         public void View_details()
@@ -54,6 +75,7 @@ namespace Database_Project
                 Console.WriteLine($"Account Number: {reader["account"]}");
                 Console.WriteLine($"Account Holder Name: {reader["name"]}");
                 Console.WriteLine($"Balance: {reader["balance"]}");
+                Console.WriteLine($"Account Status: ({((bool)reader["active"] ? "Active" : "Block")})");
             }
 
         }
@@ -70,7 +92,7 @@ namespace Database_Project
 
         public bool Exists()
         {
-            string query = $"SELECT * FROM users WHERE account='{account}'";
+            string query = $"SELECT account FROM users WHERE account='{account}'";
             var reader = DatabaseHelper.Instance.getData(query);
             if (reader.Read())
             {
@@ -83,6 +105,24 @@ namespace Database_Project
         {
             string query = $"UPDATE users SET pin='{pin}' WHERE account='{account}'";
             DatabaseHelper.Instance.Update(query);
+        }
+
+        public void Show_Transaction()
+        {
+            string query = $"SELECT * from transactions WHERE fromacc='{account}' OR toacc='{account}'";
+            var reader = DatabaseHelper.Instance.getData(query);
+            if (reader.Read())
+            {
+                Console.WriteLine($"{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
+                while (reader.Read())
+                {
+                    Console.WriteLine($"{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No transactions Yet");
+            }
         }
 
     }
