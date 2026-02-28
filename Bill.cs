@@ -48,6 +48,13 @@ namespace Database_Project
             
            
         }
+        public void Load_Bill()
+        {
+            amount = float.Parse(this.Get_Details("amount"));
+            type = this.Get_Details("type");
+            company = this.Get_Details("company");
+
+        }
         public bool Exist()
         {
             string query = $"SELECT id FROM bills WHERE id='{id}'";
@@ -58,7 +65,7 @@ namespace Database_Project
             }
             return false;
         }
-        public void Load_bill()
+        public void Show_bill()
         {
             string query = $"SELECT * FROM bills WHERE id='{id}'";
             var reader = DatabaseHelper.Instance.getData(query);
@@ -68,6 +75,16 @@ namespace Database_Project
                 Console.WriteLine($"{reader["id"],-20}{reader["amount"],-20}{reader["type"],-20}{reader["company"],-20}");
             }
             
+        }
+        public string Get_Details(string x)
+        {
+            string query = $"SELECT * FROM bills WHERE id='{id}'";
+            var reader = DatabaseHelper.Instance.getData(query);
+            if(reader.Read())
+            {
+                return reader[x].ToString();
+            }
+            return "";
         }
     }
 }

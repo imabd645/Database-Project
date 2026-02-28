@@ -33,5 +33,6 @@ namespace Database_Project
             string query = $"INSERT INTO transactions VALUES('{fromacc}','{toacc}','{fromname}','{toname}','{type}','{amount}','{time}')";
             DatabaseHelper.Instance.Update(query);
         }
+
     }
 }

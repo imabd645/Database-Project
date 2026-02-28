@@ -15,12 +15,51 @@ namespace Database_Project
         static void Main(string[] args)
         {
 
-            
+            bool isrunning = true;
+            while(isrunning)
+            {
+                Console.Clear();
+                Main_Menu();
+                Console.Write("Enter your choice: ");
+                int choice = int.Parse(Console.ReadLine());
+                switch (choice)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        User_Code();
+                        Pause();
+                        break;
+                    case 4:
+                        isrunning = false;
+                        break;
+
+
+                }
+
+            }
 
             User_Code();
            
         }
 
+        static bool Check_Account(string account)
+        {
+            if(account.Length!=11)
+            {
+                Console.WriteLine("Account Number should be 11 digits");
+                return false;
+            }
+            if (account[0]!='0' || account[1]=='3')
+            {
+                Console.WriteLine("Account Number Should be in (03xxxx) format");
+                return false;
+            }
+            return true;
+
+        }
         static void Main_Menu()
         {
             Console.WriteLine("======EasyPaisa======");
@@ -34,6 +73,7 @@ namespace Database_Project
             Console.WriteLine("====User Menu=====");
             Console.WriteLine("1)Money Transfer");
             Console.WriteLine("2)Bill Payment");
+            Console.WriteLine("4)Mobile Load & Packages");
             Console.WriteLine("3)My Account");
             Console.WriteLine("4)Help Center");
             Console.WriteLine("5)Logout");
@@ -59,6 +99,7 @@ namespace Database_Project
                             break;
                         case 2:
                             Bill_Payment();
+                            Pause();
                             break;
                         case 3:
                             MyAccount_Code();
@@ -84,6 +125,7 @@ namespace Database_Project
         {
             Console.Write("Enter the Account Number: ");
             string acc= Console.ReadLine();
+            if (!Check_Account(acc)) return false ;
             Console.Write("Enter the Pin: ");
             string pin = Console.ReadLine();
             User user = new User(acc);
@@ -124,7 +166,9 @@ namespace Database_Project
             Console.WriteLine("1)change Pin");
             Console.WriteLine("2)View Transaction History");
             Console.WriteLine("3)View Account Details");
-            Console.WriteLine("4)Back");
+            Console.WriteLine("4)Search Transaction by date");
+            Console.WriteLine("5)Search Tranasctions by Reciver Name");
+            Console.WriteLine("6)Back");
         }
         static void MyAccount_Code()
         {
@@ -155,6 +199,14 @@ namespace Database_Project
                             Pause();
                             break;
                         case 4:
+                            Search_Tranasctions();
+                            Pause();
+                            break;
+                        case 5:
+                            Search_By_Name();
+                            Pause();
+                            break;
+                        case 6:
                             isrunning = false;
                             break;
 
@@ -174,6 +226,7 @@ namespace Database_Project
             Console.Clear();
             Console.Write("Enter the Reciever number: ");
             string acc = Console.ReadLine();
+            if (!Check_Account(acc)) return;
             User rec = new User(acc);
             if (rec.Exists())
             {
@@ -221,7 +274,64 @@ namespace Database_Project
         }
         static void Bill_Payment()
         {
-            Consi
+            current_user.Load_User();
+            Console.Clear();
+            Console.Write("Enter the Bill ID: ");
+            string id = Console.ReadLine();
+            Bill bill = new Bill(id);
+            if (bill.Exist())
+            {
+               
+                bill.Show_bill();
+                bill.Load_Bill();
+                Console.Write("Enter pin to confirm transaction: ");
+                string pin = Console.ReadLine();
+                if (pin == current_user.pin)
+                {
+                  
+                    if (current_user.balance >= bill.amount)
+                    { 
+                        current_user.Update_Balance(current_user.balance - bill.amount);
+                        Transaction t = new Transaction(current_user.account, bill.company, current_user.name, bill.company, bill.type, bill.amount);
+                        t.Add_Transaction();
+                        Console.WriteLine("Bill Paid Successfully");
+                    
+                    }
+                    else
+                    {
+                        Console.WriteLine("Insufficient funds");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect pin!");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Invalid Bill ID");
+            }
+
+        }
+
+        static void Search_Tranasctions()
+        {
+            Console.Clear();
+            Console.Write("Enter date to search Tranasctions (2026-2-27): ");
+            string date = Console.ReadLine();
+            current_user.Load_User();
+            current_user.Search_Transaction(date);
+        }
+
+        static void Search_By_Name()
+        {
+            Console.Clear();
+            Console.Write("Enter the Reciver Name: ");
+            string name = Console.ReadLine();
+            current_user.Load_User();
+            current_user.Search_By_Name(name);
+
         }
         static void Create_User()
         {

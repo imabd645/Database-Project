@@ -111,18 +111,57 @@ namespace Database_Project
         {
             string query = $"SELECT * from transactions WHERE fromacc='{account}' OR toacc='{account}'";
             var reader = DatabaseHelper.Instance.getData(query);
-            if (reader.Read())
+          
+            Console.WriteLine($"{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
+            while (reader.Read())
             {
-                Console.WriteLine($"{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
-                while (reader.Read())
-                {
-                    Console.WriteLine($"{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
-                }
+                Console.WriteLine($"{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
             }
-            else
+            
+        }
+        public void Search_Transaction(string date)
+        {
+            
+            DateTime dt = DateTime.Parse(date);
+            string mysqlDate = dt.ToString("yyyy-MM-dd"); 
+
+            string query = $"SELECT * from transactions WHERE (fromacc='{account}' OR toacc='{account}') AND DATE(time) = '{mysqlDate}'";
+
+            var reader = DatabaseHelper.Instance.getData(query);
+
+            bool any = false;
+            Console.WriteLine($"{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
+
+            while (reader.Read())
             {
-                Console.WriteLine("No transactions Yet");
+                any = true;
+                Console.WriteLine($"{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
             }
+
+            if (!any)
+            {
+                Console.WriteLine("No Transactions for this date");
+            }
+        }
+        public void Search_By_Name(string rec)
+        {
+            string query = $"SELECT * FROM transactions WHERE toname LIKE'{rec}'";
+            var reader = DatabaseHelper.Instance.getData(query);
+
+            bool any = false;
+            Console.WriteLine($"{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
+
+            while (reader.Read())
+            {
+                any = true;
+                Console.WriteLine($"{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
+            }
+
+            if (!any)
+            {
+                Console.WriteLine("No Transactions for this date");
+            }
+
         }
 
     }

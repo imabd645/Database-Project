@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Bill.cs" />
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="Package.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transaction.cs" />
