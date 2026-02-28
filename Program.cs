@@ -73,10 +73,10 @@ namespace Database_Project
             Console.WriteLine("====User Menu=====");
             Console.WriteLine("1)Money Transfer");
             Console.WriteLine("2)Bill Payment");
-            Console.WriteLine("4)Mobile Load & Packages");
-            Console.WriteLine("3)My Account");
-            Console.WriteLine("4)Help Center");
-            Console.WriteLine("5)Logout");
+            Console.WriteLine("3)Mobile Load & Packages");
+            Console.WriteLine("4)My Account");
+            Console.WriteLine("5)Help Center");
+            Console.WriteLine("6)Logout");
         }
         static void User_Code()
         {
@@ -102,12 +102,14 @@ namespace Database_Project
                             Pause();
                             break;
                         case 3:
-                            MyAccount_Code();
                             break;
                         case 4:
-                            Help_Center();
+                            MyAccount_Code();
                             break;
                         case 5:
+                            Help_Center();
+                            break;
+                        case 6:
                             is_running = false;
                             break;
 
@@ -331,6 +333,10 @@ namespace Database_Project
             string name = Console.ReadLine();
             current_user.Load_User();
             current_user.Search_By_Name(name);
+
+        }
+        static void Mobile_Load()
+        {
 
         }
         static void Create_User()
