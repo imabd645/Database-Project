@@ -14,7 +14,7 @@ namespace Database_Project
         public int price;
         public string description;
 
-        public Package(int id,string name="",string company="",int price=0,string description="")
+        public Package(int id, string name = "", string company = "", int price = 0, string description = "")
         {
             this.id = id;
             this.name = name;
@@ -40,7 +40,7 @@ namespace Database_Project
         {
             string query = $"SELECT * FROM packages WHERE id='{id}'";
             var reader = DatabaseHelper.Instance.getData(query);
-            if(reader.Read())
+            if (reader.Read())
             {
                 return reader[x].ToString();
             }
@@ -49,18 +49,30 @@ namespace Database_Project
         public void Show_Packages()
         {
             string query = $"SELECT * FROM packages";
-            var reader=DatabaseHelper.Instance.getData(query);
+            var reader = DatabaseHelper.Instance.getData(query);
             Console.WriteLine($"{"ID",-5}{"Name",-15}{"Company",-15}{"Price",-10}{"Description"}");
             bool any = false;
-            while(reader.Read())
+            while (reader.Read())
             {
-                Console.WriteLine($"{id,-5}{name,-15}{company,-15}{price,-10}{description}");
+                Console.WriteLine($"{reader["id"],-5}{reader["name"],-15}{reader["company"],-15}{reader["price"],-10}{reader["description"]}");
                 any = true;
             }
-            if(!any)
+            if (!any)
             {
                 Console.Clear();
                 Console.WriteLine("No Packages available right now");
+            }
+        }
+        public void Show_Package()
+        {
+            string query = $"SELECT * FROM packages WHERE id='{id}'";
+            var reader = DatabaseHelper.Instance.getData(query);
+            
+            if (reader.Read())
+            {
+
+                Console.WriteLine($"{reader["id"],-5}{reader["name"],-15}{reader["company"],-15}{reader["price"],-10}{reader["description"]}");
+
             }
         }
     }

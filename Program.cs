@@ -41,7 +41,7 @@ namespace Database_Project
 
             }
 
-            User_Code();
+           
            
         }
 
@@ -52,7 +52,7 @@ namespace Database_Project
                 Console.WriteLine("Account Number should be 11 digits");
                 return false;
             }
-            if (account[0]!='0' || account[1]=='3')
+            if (account[0]!='0' || account[1]!='3')
             {
                 Console.WriteLine("Account Number Should be in (03xxxx) format");
                 return false;
@@ -102,6 +102,8 @@ namespace Database_Project
                             Pause();
                             break;
                         case 3:
+                            Mobile_Load();
+                            Pause();
                             break;
                         case 4:
                             MyAccount_Code();
@@ -248,7 +250,7 @@ namespace Database_Project
                         Console.WriteLine("Amount should be greater than zero!");
                         return;
                     }
-                    Console.Write("Enter your oin to Confirm Transaction");
+                    Console.Write("Enter your pin to Confirm Transaction");
                     string pin = Console.ReadLine();
                     if (pin != current_user.pin)
                     {
@@ -337,7 +339,38 @@ namespace Database_Project
         }
         static void Mobile_Load()
         {
-
+            Console.Clear();
+            Package p = new Package(0);
+            p.Show_Packages();
+            Console.Write("Enter your choice: ");
+            int choice = int.Parse(Console.ReadLine());
+            p = new Package(choice);
+            p.Load_Package();
+            current_user.Load_User();
+            Console.Clear();
+            p.Show_Package();
+            Console.Write("\n\nEnter the Mobile Number: ");
+            string acc = Console.ReadLine();
+            Console.Write("Enter pin to Confirm: ");
+            string pin = Console.ReadLine();
+            if(pin==current_user.pin)
+            {
+                if(p.price<=current_user.balance)
+                {
+                    current_user.Update_Balance(current_user.balance - p.price);
+                    Transaction t = new Transaction(current_user.account, acc, current_user.name, p.company, "Pacakge", p.price);
+                    t.Add_Transaction();
+                    Console.WriteLine("Package Subscribed sucessfuly");
+                }
+                else
+                {
+                    Console.WriteLine("Insufficient funds");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Incorrect Pin");
+            }
         }
         static void Create_User()
         {
