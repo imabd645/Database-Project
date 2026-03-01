@@ -79,6 +79,32 @@ namespace Database_Project
             Console.WriteLine("5)Help Center");
             Console.WriteLine("6)Logout");
         }
+
+        static void Admin_Menu()
+        {
+            Console.Clear();
+            Console.WriteLine("1)Add User");
+            Console.WriteLine("2)Modify User");
+            Console.WriteLine("3)Activate User");
+            Console.WriteLine("4)Deactivate User");
+            Console.WriteLine("5)Update Balance");
+            Console.WriteLine("6)View All Transactions");
+            Console.WriteLine("7)View User Tranasctions");
+            Console.WriteLine("8)View Transactions By Date");
+            Console.WriteLine("9)View Transactions By Date Of User");
+            Console.WriteLine("10)Delete Transaction");
+            Console.WriteLine("11)Reverse Transaction");
+            Console.WriteLine("12)View All Bills");
+            Console.WriteLine("13)Add Bill");
+            Console.WriteLine("14)Edit Bill");
+            Console.WriteLine("15)Delete Bill");
+            Console.WriteLine("16)View All Packages");
+            Console.WriteLine("17)Add Package");
+            Console.WriteLine("18) Edit Package");
+            Console.WriteLine("19)Delete Package");
+            Console.WriteLine("20)Logout");
+
+        }
         static void User_Code()
         {
             bool is_running = true;
@@ -134,7 +160,7 @@ namespace Database_Project
             {
                 while(isrunning)
                 {
-
+            
                 }
             }
             else
