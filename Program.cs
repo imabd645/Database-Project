@@ -128,9 +128,36 @@ namespace Database_Project
 
         static void Admin_Code()
         {
+            bool isrunning = true;
+            Console.Clear();
+            if(Admin_Login())
+            {
+                while(isrunning)
+                {
 
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Credentials");
+            }
         }
-        static void Admin_Login()
+        static bool Admin_Login()
+        {
+            const string admin_username = "admin";
+            const string admin_password = "admin123";
+            Console.Clear();
+            Console.Write("Enter admin username: ");
+            string usr = Console.ReadLine();
+            Console.Write("Enter the admin password: ");
+            string pwd = Console.ReadLine();
+            if(usr==admin_username && admin_password==pwd)
+            {
+                Console.WriteLine("Login Successful");
+                return true;
+            }
+            return false;
+        }
         static bool User_Login()
         {
             Console.Write("Enter the Account Number: ");
