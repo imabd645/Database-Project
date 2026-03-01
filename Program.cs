@@ -25,6 +25,7 @@ namespace Database_Project
                 switch (choice)
                 {
                     case 1:
+                        Admin_Code();
                         break;
                     case 2:
                         break;
@@ -125,6 +126,11 @@ namespace Database_Project
 
         }
 
+        static void Admin_Code()
+        {
+
+        }
+        static void Admin_Login()
         static bool User_Login()
         {
             Console.Write("Enter the Account Number: ");
