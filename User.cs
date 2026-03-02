@@ -39,15 +39,26 @@ namespace Database_Project
 
         public void Activate()
         {
-            string query = $"UPADTE users SET active=1 WHERE account='{account}'";
+            string query = $"UPDATE users SET active=1 WHERE account='{account}'";
             DatabaseHelper.Instance.Update(query);
         }
         public void Deactivate()
         {
-            string query = $"UPADTE users SET active=0 WHERE account='{account}'";
+            string query = $"UPDATE users SET active=0 WHERE account='{account}'";
             DatabaseHelper.Instance.Update(query);
         }
 
+        public void Show_Users()
+        {
+            string query = $"SELECT * FROM users";
+            var reader = DatabaseHelper.Instance.getData(query);
+            Console.WriteLine($"{"Account Number",-20}{"Account Name",-20}{"Balance",-10}{"Status",-10}");
+            while(reader.Read())
+            {
+
+                Console.WriteLine($"{reader["account"],-20}{reader["name"],-20}{reader["balance"],-10}{((bool)reader["active"] ? "Active" : "Block")}");
+            }
+        }
 
         public void Create()
         {

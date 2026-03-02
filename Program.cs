@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.Remoting.Messaging;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -84,25 +86,26 @@ namespace Database_Project
         {
             Console.Clear();
             Console.WriteLine("1)Add User");
-            Console.WriteLine("2)Modify User");
-            Console.WriteLine("3)Activate User");
-            Console.WriteLine("4)Deactivate User");
-            Console.WriteLine("5)Update Balance");
-            Console.WriteLine("6)View All Transactions");
-            Console.WriteLine("7)View User Tranasctions");
-            Console.WriteLine("8)View Transactions By Date");
-            Console.WriteLine("9)View Transactions By Date Of User");
-            Console.WriteLine("10)Delete Transaction");
-            Console.WriteLine("11)Reverse Transaction");
-            Console.WriteLine("12)View All Bills");
-            Console.WriteLine("13)Add Bill");
-            Console.WriteLine("14)Edit Bill");
-            Console.WriteLine("15)Delete Bill");
-            Console.WriteLine("16)View All Packages");
-            Console.WriteLine("17)Add Package");
-            Console.WriteLine("18) Edit Package");
-            Console.WriteLine("19)Delete Package");
-            Console.WriteLine("20)Logout");
+            Console.WriteLine("2)View All Users");
+            Console.WriteLine("3)Modify User");
+            Console.WriteLine("4)Activate User");
+            Console.WriteLine("5)Deactivate User");
+            Console.WriteLine("6)Update Balance");
+            Console.WriteLine("7)View All Transactions");
+            Console.WriteLine("8)View User Tranasctions");
+            Console.WriteLine("9)View Transactions By Date");
+            Console.WriteLine("10)View Transactions By Date Of User");
+            Console.WriteLine("11)Delete Transaction");
+            Console.WriteLine("12)Reverse Transaction");
+            Console.WriteLine("13)View All Bills");
+            Console.WriteLine("14)Add Bill");
+            Console.WriteLine("15)Edit Bill");
+            Console.WriteLine("16)Delete Bill");
+            Console.WriteLine("17)View All Packages");
+            Console.WriteLine("18)Add Package");
+            Console.WriteLine("19) Edit Package");
+            Console.WriteLine("20)Delete Package");
+            Console.WriteLine("21)Logout");
 
         }
         static void User_Code()
@@ -160,7 +163,41 @@ namespace Database_Project
             {
                 while(isrunning)
                 {
-            
+                    Console.Clear();
+                    Admin_Menu();
+                    Console.Write("Enter your choice: ");
+                    int choice = int.Parse(Console.ReadLine());
+                    switch (choice)
+                    {
+                        case 1:
+                            Create_User();
+                            Pause();
+                            break;
+                        case 2:
+                            Show_User();
+                            Pause();
+                            break;
+                        case 3:
+                            Modify_User();
+                            Pause();
+                            break;
+                        case 4:
+                            Activate_User();
+                            Pause();
+                            break;
+                        case 5:
+                            Deactivate_User();
+                            Pause();
+                            break;
+                        case 6:
+                            Admin_Update_Balance();
+                            Pause();
+                            break;
+                        case 21:
+                            isrunning = false;
+                            break;
+                    }
+
                 }
             }
             else
@@ -180,6 +217,7 @@ namespace Database_Project
             if(usr==admin_username && admin_password==pwd)
             {
                 Console.WriteLine("Login Successful");
+                Pause();
                 return true;
             }
             return false;
@@ -433,43 +471,108 @@ namespace Database_Project
         }
         static void Create_User()
         {
+            Console.Clear();
             Console.Write("Enter the account number: ");
             string acc = Console.ReadLine();
+            User user = new User(acc);
+            if(user.Exists())
+            {
+                Console.WriteLine("User with this account number already exists");
+                return;
+            }
             Console.Write("Enter the account holder name: ");
             string name = Console.ReadLine();
             Console.Write("Enter the pin: ");
             string pin = Console.ReadLine();
             Console.Write("Enter initial balnce: ");
             float balance = float.Parse(Console.ReadLine());
-            User user = new User(acc, name, pin, true, balance);
+            if(balance<0)
+            {
+                Console.WriteLine("Balance cannot be negative");
+                return;
+            }
+            user = new User(acc, name, pin, true, balance);
             user.Create();
             Console.WriteLine("Account Created Successfully!");
         }
+        static void Show_User()
+        {
+            Console.Clear();
+            User user = new User(null);
+            user.Show_Users();
+        }
+
+        static void Activate_User()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the account number: ");
+            string acc = Console.ReadLine();
+            User user = new User(acc);
+            if(!user.Exists())
+            {
+                Console.WriteLine("Account does not exits");
+            }
+            user.Load_User();
+            Console.WriteLine($"Are you sure to Activate the {user.name}");
+            Console.Write("press y to activate: ");
+            string yes = Console.ReadLine();
+            if(yes=="y" || yes=="Y")
+            {
+                user.Activate();
+                Console.WriteLine("Account Activated Successfully");
+                return;
+            }
+            Console.WriteLine("Account Activation cancelled");
+
+        }
+        static void Deactivate_User()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the account number: ");
+            string acc = Console.ReadLine();
+            User user = new User(acc);
+            if (!user.Exists())
+            {
+                Console.WriteLine("Account does not exits");
+            }
+            user.Load_User();
+            Console.WriteLine($"Are you sure to Deactivate the {user.name}");
+            Console.Write("press y to deactivate: ");
+            string yes = Console.ReadLine();
+            if (yes == "y" || yes == "Y")
+            {
+                user.Deactivate();
+                Console.WriteLine("Account Deactivated Successfully");
+                return;
+            }
+            Console.WriteLine("Account Deactivation cancelled");
+
+        }
         static void Modify_User()
         {
+            Console.Clear();
             Console.Write("Enter the account number: ");
             string acc = Console.ReadLine();
-            Console.Write("Enter the account holder name: ");
-            string name = Console.ReadLine();
-            Console.Write("Enter the pin: ");
-            string pin = Console.ReadLine();
-            Console.Write("Enter initial balnce: ");
-            float balance = float.Parse(Console.ReadLine());
-            User user = new User(acc, name, pin, true, balance);
-            user.Modify();
-            Console.WriteLine("Account Modified Successfully!");
+            User user = new User(acc);
+            if(user.Exists())
+            {
+                Console.Write("Enter the account holder name: ");
+                string name = Console.ReadLine();
+                Console.Write("Enter the pin: ");
+                string pin = Console.ReadLine();
+                Console.Write("Enter initial balnce: ");
+                float balance = float.Parse(Console.ReadLine());
+                user = new User(acc, name, pin,true, balance);
+                user.Modify();
+                Console.WriteLine("Account Modified Successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid Account Number: ");
+            }
+            
         }
-        static void Update_Balance()
-        {
-            Console.Write("Enter the account number: ");
-            string acc = Console.ReadLine();
-            Console.Write("Enter the new balance: ");
-            float balance = float.Parse(Console.ReadLine());
-            User user = new User(acc,  active:true, balance:balance);
-            user.Update_Balance(balance);
-
-
-        }
+        
         static void Help_Center()
         {
             Console.Clear();
@@ -499,6 +602,30 @@ namespace Database_Project
            
 
 
+        }
+        static void Admin_Update_Balance()
+        {
+            Console.Clear();
+            Console.Write("Enter the Account number: ");
+            string acc = Console.ReadLine();
+            User user = new User(acc);
+            if(user.Exists())
+            {
+                user.Load_User();
+                Console.WriteLine($"Account Holder Name: {user.name}");
+                Console.WriteLine($"Current Balance: {user.balance}");
+                Console.Write("Enter amount to update: (+/-): ");
+                float amount = float.Parse(Console.ReadLine());
+                user.Update_Balance(user.balance + amount);
+                user.Load_User();
+                Console.WriteLine("Balance Updated Successfully");
+                Console.WriteLine($"New Balance is {user.balance}");
+              
+            }
+            else
+            {
+                Console.WriteLine("Invalid Account Number: ");
+            }
         }
     }
 }
