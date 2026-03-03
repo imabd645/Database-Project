@@ -32,7 +32,7 @@ namespace Database_Project
 
         public void Modify_Bill()
         {
-            string query = $"MODIFY bills SET amount='{amount}',type='{type}',company='{company}' WHERE id='{id}'";
+            string query = $"UPDATE bills SET amount='{amount}',type='{type}',company='{company}' WHERE id='{id}'";
             DatabaseHelper.Instance.Update(query);
         }
         public void Delete_Bill()

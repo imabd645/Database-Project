@@ -175,5 +175,17 @@ namespace Database_Project
 
         }
 
+        public void Login()
+        {
+            string query = $"INSERT INTO login VALUES('{account}')";
+            DatabaseHelper.Instance.Update(query);
+        }
+        public void Logout()
+        {
+            string query = $"DELETE FROM login";
+            DatabaseHelper.Instance.Update(query);
+        }
+
+
     }
 }

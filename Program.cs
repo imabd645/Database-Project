@@ -144,6 +144,7 @@ namespace Database_Project
                             Help_Center();
                             break;
                         case 6:
+                            current_user.Logout();
                             is_running = false;
                             break;
 
@@ -211,6 +212,22 @@ namespace Database_Project
                             Admin_Search_Tranasctions();
                             Pause();
                             break;
+                        case 13:
+                            View_Bills();
+                            Pause();
+                            break;
+                        case 14:
+                            Add_Bill();
+                            Pause();
+                            break;
+                        case 15:
+                            Edit_Bill();
+                            Pause();
+                            break;
+                        case 16:
+                            Delete_Bil();
+                            Pause();
+                            break;
                         case 21:
                             isrunning = false;
                             break;
@@ -240,8 +257,27 @@ namespace Database_Project
             }
             return false;
         }
+
+        static bool check_Login()
+        {
+            string query = $"SELECT * FROM login";
+            var reader = DatabaseHelper.Instance.getData(query);
+            if(reader.Read())
+            {
+                string account = reader["account"].ToString();
+                current_user = new User(account);
+                current_user.Load_User();
+                return true;
+            }
+            return false;
+        }
         static bool User_Login()
         {
+            if (check_Login())
+            {
+                Console.WriteLine("Welcome Back!");
+                return true;
+            }
             Console.Write("Enter the Account Number: ");
             string acc = Console.ReadLine();
             if (!Check_Account(acc)) return false;
@@ -257,6 +293,7 @@ namespace Database_Project
                     {
                         Console.WriteLine("Login Successful");
                         current_user = user;
+                        current_user.Login();
                         current_user.Load_User();
                         return true;
                     }
@@ -346,6 +383,11 @@ namespace Database_Project
             Console.Write("Enter the Reciever number: ");
             string acc = Console.ReadLine();
             if (!Check_Account(acc)) return;
+            if(acc==current_user.account)
+            {
+                Console.WriteLine("You cannot send money to your own account");
+                return;
+            }
             User rec = new User(acc);
             if (rec.Exists())
             {
@@ -707,13 +749,15 @@ namespace Database_Project
         static public void Add_Bill()
         {
             Console.Clear();
+            Console.Write("Enter the bill id: ");
+            string id = Console.ReadLine();
             Console.Write("Enter the bill amount: ");
             float amount = float.Parse(Console.ReadLine());
             Console.Write("Enter the bill type: ");
             string type = Console.ReadLine();
             Console.Write("Enter the bill company: ");
             string compnay = Console.ReadLine();
-            Bill b = new Bill("", amount, type, compnay);
+            Bill b = new Bill(id, amount, type, compnay);
             b.Add_Bill();
             Console.WriteLine("Bill Added Successfully");
         }
@@ -752,6 +796,20 @@ namespace Database_Project
                 b.Show_bill();
                 Console.Write("Press y to delete bill: ");
                 string yes = Console.ReadLine();
+                if (yes == "y" || yes == "Y")
+                {
+                    b.Delete_Bill();
+                    Console.WriteLine("Bill Deleted Successfully");
+
+                }
+                else
+                {
+                    Console.WriteLine("Bill Deletition canacelled");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Bill ID");
             }
         }
     }
