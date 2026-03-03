@@ -29,6 +29,17 @@ namespace Database_Project
             string query = $"INSERT INTO bills VALUES('{id}','{amount}','{type}','{company}')";
             DatabaseHelper.Instance.Update(query);
         }
+
+        public void Modify_Bill()
+        {
+            string query = $"MODIFY bills SET amount='{amount}',type='{type}',company='{company}' WHERE id='{id}'";
+            DatabaseHelper.Instance.Update(query);
+        }
+        public void Delete_Bill()
+        {
+            string query = $"DELETE FROM bills WHERE id='{id}'";
+            DatabaseHelper.Instance.Update(query);
+        }
         public void Show_Bills()
         {
             string query = "SELECT * FROM bills";
@@ -76,6 +87,8 @@ namespace Database_Project
             }
             
         }
+
+
         public string Get_Details(string x)
         {
             string query = $"SELECT * FROM bills WHERE id='{id}'";
