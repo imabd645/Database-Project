@@ -417,7 +417,7 @@ namespace Database_Project
                     current_user.Update_Balance(current_user.balance - amount);
                     rec.Update_Balance(rec.balance + amount);
                     Console.WriteLine("Transaction Successful");
-                    Transaction t = new Transaction(current_user.account, rec.account, current_user.name, rec.name, "Transfer", amount);
+                    Transaction t = new Transaction(0,current_user.account, rec.account, current_user.name, rec.name, "Transfer", amount);
                     t.Add_Transaction();
                 }
                 else
@@ -453,7 +453,7 @@ namespace Database_Project
                     if (current_user.balance >= bill.amount)
                     {
                         current_user.Update_Balance(current_user.balance - bill.amount);
-                        Transaction t = new Transaction(current_user.account, bill.company, current_user.name, bill.company, bill.type, bill.amount);
+                        Transaction t = new Transaction(0,current_user.account, bill.company, current_user.name, bill.company, bill.type, bill.amount);
                         t.Add_Transaction();
                         Console.WriteLine("Bill Paid Successfully");
 
@@ -515,7 +515,7 @@ namespace Database_Project
                 if (p.price <= current_user.balance)
                 {
                     current_user.Update_Balance(current_user.balance - p.price);
-                    Transaction t = new Transaction(current_user.account, acc, current_user.name, p.company, "Pacakge", p.price);
+                    Transaction t = new Transaction(0,current_user.account, acc, current_user.name, p.company, "Pacakge", p.price);
                     t.Add_Transaction();
                     Console.WriteLine("Package Subscribed sucessfuly");
                 }
@@ -667,7 +667,7 @@ namespace Database_Project
         static void Admin_Show_Tranasctions()
         {
             Console.Clear();
-            Transaction t = new Transaction(null, null);
+            Transaction t = new Transaction(0,null, null);
             t.Show_Transactions();
         }
         static void Admin_Update_Balance()
@@ -735,9 +735,22 @@ namespace Database_Project
             Console.Clear();
             Console.Write("Enter the date to  search Tranasctions (2026-2-27): ");
             string date = Console.ReadLine();
-            Transaction t = new Transaction(null, null);
+            Transaction t = new Transaction(0,null, null);
             t.Search_Transaction(date);
         }
+
+        static void Delete_Transactions()
+        {
+            Console.Clear();
+            Admin_Show_Tranasctions();
+            Console.Write("Enter the Transaction ID: ");
+            int id = int.Parse(Console.ReadLine());
+            Transaction t = new Transaction(id, null, null);
+            t.Delete();
+            Console.WriteLine("Transaction Delitition Successful");
+        }
+
+        static void Reverse_Transaction()
 
 
         static public void View_Bills()

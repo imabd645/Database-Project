@@ -10,6 +10,7 @@ namespace Database_Project
     internal class Transaction
     {
 
+        public int id;
         public string fromacc;
         public string toacc;
         public string fromname;
@@ -18,8 +19,9 @@ namespace Database_Project
         public float amount;
         public string time;
 
-        public Transaction(string fromacc,string toacc,string fromname="",string toname="",string type="",float amount=0.0f)
+        public Transaction(int id=0,string fromacc,string toacc,string fromname="",string toname="",string type="",float amount=0.0f)
         {
+            this.id = id;
             this.fromacc = fromacc;
             this.toacc = toacc;
             this.fromname = fromname;
@@ -40,10 +42,10 @@ namespace Database_Project
             string query = $"SELECT * from transactions ";
             var reader = DatabaseHelper.Instance.getData(query);
 
-            Console.WriteLine($"{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
+            Console.WriteLine($"{"ID",-5}{"Sender",-15}{"Reciever",-15}{"Sender Name",-20}{"Reciever Name",-20}{"Type",-10}{"Amount",-10}{"Time"}");
             while (reader.Read())
             {
-                Console.WriteLine($"{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
+                Console.WriteLine($"{reader["id"],-5}{reader["fromacc"],-15}{reader["toacc"],-15}{reader["fromname"],-20}{reader["toname"],-20}{reader["type"],-10}{reader["amount"],-10}{reader["time"]}");
             }
         }
         public void Search_Transaction(string date)
@@ -69,6 +71,19 @@ namespace Database_Project
             {
                 Console.WriteLine("No Transactions for this date");
             }
+        }
+
+        public void Delete()
+        {
+            string query = $"DELETE FROM transactions WHERE id='{id}'";
+            DatabaseHelper.Instance.Update(query);
+        }
+
+        public string  Get_Details(string x)
+        {
+            string query = $"SELECT * FROM transactions WHERE id='{id}'";
+            var reader = DatabaseHelper.Instance.getData(query);
+            return reader[x].ToString();
         }
 
     }
