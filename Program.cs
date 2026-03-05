@@ -212,6 +212,14 @@ namespace Database_Project
                             Admin_Search_Tranasctions();
                             Pause();
                             break;
+                        case 11:
+                            Delete_Transactions();
+                            Pause();
+                            break;
+                        case 12:
+                            Reverse_Transaction();
+                            Pause();
+                            break;
                         case 13:
                             View_Bills();
                             Pause();
@@ -226,6 +234,22 @@ namespace Database_Project
                             break;
                         case 16:
                             Delete_Bil();
+                            Pause();
+                            break;
+                        case 17:
+                            Show_Packages();
+                            Pause();
+                            break;
+                        case 18:
+                            Add_Package();
+                            Pause();
+                            break;
+                        case 19:
+                            Edit_Package();
+                            Pause();
+                            break;
+                        case 20:
+                            Delete_Package();
                             Pause();
                             break;
                         case 21:
@@ -751,6 +775,34 @@ namespace Database_Project
         }
 
         static void Reverse_Transaction()
+        {
+            Console.Clear();
+            Console.Write("Enter the Transaction ID: ");
+            int id = int.Parse(Console.ReadLine());
+            Transaction t = new Transaction(id, null, null);
+            t.Show_Transaction();
+            string sender = t.Get_Details("fromacc");
+            string rec = t.Get_Details("toacc");
+            float amount = float.Parse(t.Get_Details("amount"));
+            User send = new User(sender);
+            send.Load_User();
+            User reciver = new User(rec);
+            reciver.Load_User();
+            Console.Write("Press y to continue: ");
+            string yes = Console.ReadLine();
+            if(yes=="Y" || yes=="y")
+            {
+                send.Update_Balance(send.balance + amount);
+                reciver.Update_Balance(reciver.balance - amount);
+                Transaction x = new Transaction(0, sender, rec, send.name, reciver.name, "Reversed", amount);
+                x.Add_Transaction();
+                Console.WriteLine("Transcation Reversed successfully");
+            }
+            else
+            {
+                Console.WriteLine("Transaction Reverse Cancelled");
+            }
+        }
 
 
         static public void View_Bills()
@@ -824,6 +876,63 @@ namespace Database_Project
             {
                 Console.WriteLine("Invalid Bill ID");
             }
+        }
+        static void Show_Packages()
+        {
+            Console.Clear();
+            Package p = new Package(0);
+            p.Show_Packages();
+        }
+        static void Add_Package()
+        {
+            Console.Clear();
+            Console.Write("Enter the Pcakage Name: ");
+            string name = Console.ReadLine();
+            Console.Write("Enter the Package Company: ");
+            string compnay = Console.ReadLine();
+            Console.Write("Enter the Package Price: ");
+            int amount = int.Parse(Console.ReadLine());
+            Console.Write("Enter the description of the Package: ");
+            string descr = Console.ReadLine();
+            Package p = new Package(0, name, compnay, amount, descr);
+            p.Add_Package();
+            Console.WriteLine("Package Added Successfully");
+        }
+        static void Delete_Package()
+        {
+            Console.Clear();
+            Show_Packages();
+            Console.Write("Enter the Package ID: ");
+            int id = int.Parse(Console.ReadLine());
+            Package p = new Package(id);
+            p.Show_Package();
+            Console.Write("Press Y to continue: ");
+            string yes = Console.ReadLine();
+            if(yes=="Y"|| yes=="y")
+            {
+                p.Delete();
+                Console.WriteLine("Package Deleted Successfully");
+            }
+            else
+            {
+                Console.WriteLine("Package delition canacelled");
+            }
+        }
+        static void Edit_Package()
+        {
+            Console.Clear();
+            Show_Packages();
+            Console.Write("Enter the Package ID: ");
+            int id = int.Parse(Console.ReadLine());
+            Console.Write("Enter the new Pacakge name: ");
+            string name = Console.ReadLine();
+            Console.Write("Enter the new price: ");
+            int amount = int.Parse(Console.ReadLine());
+            Console.Write("Enter the new description: ");
+            string des = Console.ReadLine();
+            Package p = new Package(id, name, "", amount, des);
+            p.Edit();
+            Console.WriteLine("Package Updated Successfully");
         }
     }
 }

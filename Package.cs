@@ -25,7 +25,7 @@ namespace Database_Project
 
         public void Add_Package()
         {
-            string query = $"INSERT INTO VALUES('{name}','{company}','{price}','{description}')";
+            string query = $"INSERT INTO packages (name,company,price,description) VALUES('{name}','{company}','{price}','{description}')";
             DatabaseHelper.Instance.Update(query);
 
         }
@@ -74,6 +74,18 @@ namespace Database_Project
                 Console.WriteLine($"{reader["id"],-5}{reader["name"],-15}{reader["company"],-15}{reader["price"],-10}{reader["description"]}");
 
             }
+        }
+
+        public void Delete()
+        {
+            string query = $"DELETE FROM packages where id='{id}'";
+            DatabaseHelper.Instance.Update(query);
+        }
+
+        public void Edit()
+        {
+            string query = $"UPDATE packages SET name ='{name}',price='{price}',description='{description}'";
+            DatabaseHelper.Instance.Update(query);
         }
     }
 }
